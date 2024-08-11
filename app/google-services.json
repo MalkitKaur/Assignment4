@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370691522287",
+    "project_id": "assignment4-9fa1c",
+    "storage_bucket": "assignment4-9fa1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370691522287:android:099d9c868bc8b3fbde651a",
+        "android_client_info": {
+          "package_name": "ca.georgian.assignment4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANw8sxhFIG8fwzkdWXPQR1BoIsE5PSIUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
