@@ -1,3 +1,12 @@
+/**
+ * File Name: DetailsActivity.kt
+ * Author: Malkit Kaur
+ * Student ID: 200543614
+ * Date: 2024-08-11
+ * App Description: Handles the details view of a TodoItem, including updating and deleting the item.
+ * Version: 1.0
+ */
+
 package ca.georgian.assignment4
 
 import android.content.Intent
@@ -10,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity
 import ca.georgian.assignment4.databinding.DetailsViewBinding
 import java.util.*
 
+/**
+ * Activity class for displaying and editing the details of a TodoItem.
+ */
 class DetailsActivity : AppCompatActivity() {
     private lateinit var binding: DetailsViewBinding
     private val viewModel: TodoItemViewModel by viewModels()
@@ -19,7 +31,7 @@ class DetailsActivity : AppCompatActivity() {
     private var todoItemId: String? = null
     private var selectedDate: Date? = null
 
-    // Variables to store original data
+    // Variables to store original data for comparison
     private var originalName: String? = null
     private var originalNotes: String? = null
     private var originalCompleted: Boolean = false
@@ -37,6 +49,7 @@ class DetailsActivity : AppCompatActivity() {
         // Get the TodoItem ID from the intent
         todoItemId = intent.getStringExtra("todoItemId")
 
+        // Load the TodoItem if ID is available, otherwise hide delete button
         if (todoItemId != null) {
             viewModel.loadTodoItemById(todoItemId!!)
         } else {
@@ -60,7 +73,7 @@ class DetailsActivity : AppCompatActivity() {
                     binding.calendarView.visibility = View.GONE
                 }
 
-                // Store original data
+                // Store original data for change detection
                 originalName = it.name
                 originalNotes = it.notes
                 originalCompleted = it.completed
@@ -69,16 +82,19 @@ class DetailsActivity : AppCompatActivity() {
             }
         }
 
+        // Update selected date when calendar date changes
         binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
             selectedDate = calendar.time
         }
 
+        // Toggle calendar visibility based on switch state
         binding.switchDateDetail.setOnCheckedChangeListener { _, isChecked ->
             binding.calendarView.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
+        // Set up click listeners for the buttons
         binding.updateButton.setOnClickListener {
             showUpdateConfirmationDialog()
         }
@@ -92,6 +108,9 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handles the cancel action by checking for changes and showing a discard dialog if necessary.
+     */
     private fun handleCancelAction() {
         if (hasChanges()) {
             showDiscardChangesDialog()
@@ -100,6 +119,11 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks if any changes were made to the original data.
+     *
+     * @return True if changes are detected, false otherwise.
+     */
     private fun hasChanges(): Boolean {
         val currentName = binding.taskNameEditText.text.toString()
         val currentNotes = binding.notesEditText.text.toString()
@@ -114,6 +138,9 @@ class DetailsActivity : AppCompatActivity() {
                 currentHasDueDate != originalHasDueDate
     }
 
+    /**
+     * Shows a dialog to confirm discarding changes.
+     */
     private fun showDiscardChangesDialog() {
         AlertDialog.Builder(this)
             .setTitle("Discard Changes")
@@ -125,6 +152,9 @@ class DetailsActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Shows a dialog to confirm updating the TodoItem.
+     */
     private fun showUpdateConfirmationDialog() {
         AlertDialog.Builder(this)
             .setTitle("Update Todo Item")
@@ -136,6 +166,9 @@ class DetailsActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Saves the TodoItem with updated data.
+     */
     private fun saveTodoItem() {
         val name = binding.taskNameEditText.text.toString()
         val notes = binding.notesEditText.text.toString()
@@ -155,6 +188,7 @@ class DetailsActivity : AppCompatActivity() {
             viewModel.saveTodoItem(todoItem)
             Toast.makeText(this, "Todo Item Updated", Toast.LENGTH_SHORT).show()
 
+            // Navigate back to the MainActivity
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
 
@@ -164,6 +198,9 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Deletes the TodoItem and navigates back to MainActivity.
+     */
     private fun deleteTodoItem() {
         AlertDialog.Builder(this)
             .setTitle("Delete Todo Item")
@@ -173,6 +210,7 @@ class DetailsActivity : AppCompatActivity() {
                     viewModel.deleteTodoItem(todoItem)
                     Toast.makeText(this, "Todo Item Deleted", Toast.LENGTH_SHORT).show()
 
+                    // Navigate back to the MainActivity
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
 
@@ -183,3 +221,4 @@ class DetailsActivity : AppCompatActivity() {
             .show()
     }
 }
+

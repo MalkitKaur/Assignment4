@@ -3,6 +3,15 @@ package ca.georgian.assignment4
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for managing TodoItem data and communication between the UI and the DataManager.
+ *
+ * Author: Malkit Kaur
+ * StudentID: 200543614
+ * Date: 2024-08-11
+ * App Description: Manages the data and operations for TodoItems, including loading, saving, updating, and deleting.
+ * Version: 1.0
+ */
 class TodoItemViewModel : ViewModel() {
 
     // Alias for the DataManager instance
@@ -16,21 +25,33 @@ class TodoItemViewModel : ViewModel() {
     private val m_todoItem = MutableLiveData<TodoItem?>()
     val todoItem: LiveData<TodoItem?> get() = m_todoItem
 
-    // Function to load all TodoItems from the DataManager
+    /**
+     * Loads all TodoItems from the DataManager and updates LiveData.
+     */
     fun loadAllTodoItems() {
         viewModelScope.launch {
             m_todoItems.value = dataManager.getAllTodoItems()
         }
     }
 
-    // Function to load a specific TodoItem by ID from the DataManager
+    /**
+     * Loads a specific TodoItem by ID from the DataManager and updates LiveData.
+     *
+     * @param id The ID of the TodoItem to be loaded.
+     */
     fun loadTodoItemById(id: String) {
         viewModelScope.launch {
             m_todoItem.value = dataManager.getTodoItemById(id)
         }
     }
 
-    // Function to save or update a TodoItem in the DataManager
+    /**
+     * Saves or updates a TodoItem in the DataManager.
+     * If the TodoItem has an empty ID, it will be inserted; otherwise, it will be updated.
+     * After saving or updating, all TodoItems are reloaded.
+     *
+     * @param todoItem The TodoItem to be saved or updated.
+     */
     fun saveTodoItem(todoItem: TodoItem) {
         viewModelScope.launch {
             if (todoItem.id.isEmpty()) {
@@ -42,7 +63,11 @@ class TodoItemViewModel : ViewModel() {
         }
     }
 
-    // Function to delete a TodoItem from the DataManager
+    /**
+     * Deletes a TodoItem from the DataManager and reloads all TodoItems.
+     *
+     * @param todoItem The TodoItem to be deleted.
+     */
     fun deleteTodoItem(todoItem: TodoItem) {
         viewModelScope.launch {
             dataManager.delete(todoItem)
